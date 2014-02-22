@@ -1,0 +1,19 @@
+{
+  "name": "Validations",
+  "version": "0.0.1",
+  "description": "Make your Mootools classes validatable.",
+  "main": "src/Validations.js",
+  "scripts": {
+    "test": "gulp tests"
+  },
+  "author": "Evan Siegel",
+  "license": "MIT",
+  "dependencies": {
+    "mootools": "~1.4.5-2"
+  },
+  "devDependencies": {
+    "gulp-util": "~2.2.14",
+    "gulp": "~3.5.2",
+    "gulp-jasmine": "~0.1.4"
+  }
+}
