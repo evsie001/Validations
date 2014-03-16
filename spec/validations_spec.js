@@ -12,16 +12,16 @@ describe('Validations', function () {
     });
 
     it('can add one validation', function () {
-        var v = function (callback) { callback(null); };
+        var v = function (callback) { callback(); };
 
         t.addValidation(v);
 
         expect(t.$validations).toContain(v);
     });
     it('can add validations', function () {
-        var v1 = function (callback) { callback(null); };
-        var v2 = function (callback) { callback(null); };
-        var v3 = function (callback) { callback(null); };
+        var v1 = function (callback) { callback(); };
+        var v2 = function (callback) { callback(); };
+        var v3 = function (callback) { callback(); };
 
         t.addValidations([v1, v2, v3]);
 
@@ -31,7 +31,7 @@ describe('Validations', function () {
     });
 
     it('can remove one validation', function () {
-        var v = function (callback) { callback(null); };
+        var v = function (callback) { callback(); };
 
         t.addValidation(v);
 
@@ -40,9 +40,9 @@ describe('Validations', function () {
         expect(t.$validations).not.toContain(v);
     });
     it('can remove all validations', function () {
-        var v1 = function (callback) { callback(null); };
-        var v2 = function (callback) { callback(null); };
-        var v3 = function (callback) { callback(null); };
+        var v1 = function (callback) { callback(); };
+        var v2 = function (callback) { callback(); };
+        var v3 = function (callback) { callback(); };
 
         t.addValidations([v1, v2, v3]);
 
@@ -54,9 +54,9 @@ describe('Validations', function () {
     });
 
     it('can handle passing validation', function () {
-        var v1 = function (callback) { callback(null); };
-        var v2 = function (callback) { callback(null); };
-        var v3 = function (callback) { callback(null); };
+        var v1 = function (callback) { callback(); };
+        var v2 = function (callback) { callback(); };
+        var v3 = function (callback) { callback(); };
 
         t.addValidations([v1, v2, v3]);
 
@@ -67,8 +67,8 @@ describe('Validations', function () {
 
     it('can handle failing validation', function () {
         var v1 = function (callback) { callback(true); };
-        var v2 = function (callback) { callback(null); };
-        var v3 = function (callback) { callback(null); };
+        var v2 = function (callback) { callback(); };
+        var v3 = function (callback) { callback(); };
 
         t.addValidations([v1, v2, v3]);
 
@@ -79,8 +79,8 @@ describe('Validations', function () {
 
     it('can handle mulitple calls to validate (among changing circumstances)', function () {
         var v1 = function (callback) { callback(true); };
-        var v2 = function (callback) { callback(null); };
-        var v3 = function (callback) { callback(null); };
+        var v2 = function (callback) { callback(); };
+        var v3 = function (callback) { callback(); };
 
         t.addValidations([v1, v2, v3]);
 
@@ -98,12 +98,32 @@ describe('Validations', function () {
             expect(err).toBe(false);
         });
 
-        var v4 = function (callback) { callback(null); };
+        var v4 = function (callback) { callback(); };
 
         t.addValidation(v4);
 
         t.validate(function (err, res) {
             expect(err).toBe(false);
         });
+    });
+
+    it('can validate using different async methods', function () {
+        var v1 = function (callback) { callback(); };
+        var v2 = function (callback) { callback(); };
+        var v3 = function (callback) { callback(); };
+
+        t.addValidations([v1, v2, v3]);
+
+        t.validate(function (err, res) {
+            expect(err).not.toBe(true);
+        }, 'series');
+
+        t.validate(function (err, res) {
+            expect(err).not.toBe(true);
+        }, 'waterfall');
+
+        t.validate(function (err, res) {
+            expect(err).not.toBe(true);
+        }, 'series');
     });
 });

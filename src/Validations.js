@@ -2,18 +2,7 @@
 
     // `global` on the server, `window` in the browser.
     var root = this;
-
-    // Ensure function is only called once.
-    // Boosted from: caolan/async
-    // https://github.com/caolan/async/blob/master/lib/async.js
-    var only_once = function (fn) {
-        var called = false;
-        return function () {
-            if (called) throw new Error("Callback was already called.");
-            called = true;
-            fn.apply(root, arguments);
-        }
-    }
+    var async = require('async');
 
     var _each = function (arr, iterator) {
         if (arr.forEach) {
@@ -54,25 +43,19 @@
             return this;
         },
 
-        validate: function (callback) {
+        validate: function (callback, method) {
             callback = callback || function () {};
 
             if (!this.$validations.length) return callback();
 
-            var completed = 0;
-            _each(this.$validations, function (validation) {
-                validation(only_once(function (err) {
-                    if (err) {
-                        callback(err);
-                        callback = function () {};
-                    } else {
-                        completed += 1;
-                        if (completed >= this.$validations.length) {
-                            callback(null);
-                        }
-                    }
-                }.bind(this)));
-            }.bind(this));
+            var allowed_methods = ['series', 'waterfall', 'parallel', ''];
+
+            if (allowed_methods.contains(method)) {
+                async[method](this.$validations, callback);
+            } else {
+                if (method) console.warn(method + " not allowed, using parallel instead.");
+                async.parallel(this.$validations, callback);
+            }
         }
     });
 })();
