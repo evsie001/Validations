@@ -17,7 +17,7 @@ var validateMe = new ValidatableClass();
 
 var myGreatValidation = function (callback) {
     if (1===2) {
-        callback("Something is wrong, here.");
+        callback("Something is wrong here.");
     } else {
         callback();
     }
