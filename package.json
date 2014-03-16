@@ -1,5 +1,5 @@
 {
-  "name": "Validations",
+  "name": "mootools-validations",
   "version": "0.0.1",
   "description": "Make your Mootools classes validatable.",
   "main": "src/Validations.js",

@@ -15,7 +15,6 @@
         }
     }
 
-    // 
     var _each = function (arr, iterator) {
         if (arr.forEach) {
             return arr.forEach(iterator);
