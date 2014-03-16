@@ -76,4 +76,34 @@ describe('Validations', function () {
             expect(err).toBe(true);
         });
     });
+
+    it('can handle mulitple calls to validate (among changing circumstances)', function () {
+        var v1 = function (callback) { callback(true); };
+        var v2 = function (callback) { callback(null); };
+        var v3 = function (callback) { callback(null); };
+
+        t.addValidations([v1, v2, v3]);
+
+        t.validate(function (err, res) {
+            expect(err).toBe(true);
+        });
+
+        t.validate(function (err, res) {
+            expect(err).toBe(true);
+        });
+
+        t.removeValidation(v1);
+
+        t.validate(function (err, res) {
+            expect(err).toBe(false);
+        });
+
+        var v4 = function (callback) { callback(null); };
+
+        t.addValidation(v4);
+
+        t.validate(function (err, res) {
+            expect(err).toBe(false);
+        });
+    });
 });
